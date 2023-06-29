@@ -15,10 +15,10 @@ contract MyToken is ERC721, Ownable {
     function setBaseURI(string memory baseURI_) external onlyOwner() {
         _baseURIextended = baseURI_;
     }
-    function safeMint(address to,string memory _tokenURI) public onlyOwner {
+    function safeMint(string memory _tokenURI) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
+        _safeMint(msg.sender, tokenId);
         _setTokenURI(tokenId,_tokenURI);
     }
 
