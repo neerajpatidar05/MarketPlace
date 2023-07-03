@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract MyToken is ERC721, Ownable {
+contract ERC721Contract is ERC721, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
@@ -21,8 +21,8 @@ contract MyToken is ERC721, Ownable {
         _safeMint(msg.sender, tokenId);
         _setTokenURI(tokenId,_tokenURI);
     }
-
-            function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
+    
+            function _setTokenURI(uint256 tokenId,  string memory _tokenURI) internal virtual {
             require(_exists(tokenId), "ERC721Metadata: URI set of nonexistent token");
             _tokenURIs[tokenId] = _tokenURI;
         }
@@ -32,7 +32,7 @@ contract MyToken is ERC721, Ownable {
         }
         
         function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-            require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+            require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent tokenn");
 
             string memory _tokenURI = _tokenURIs[tokenId];
             string memory base = _baseURI();
