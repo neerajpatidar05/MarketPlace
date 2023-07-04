@@ -42,7 +42,7 @@ contract NFTMarketplace {
     event AuctionStarted(uint256 indexed tokenId,uint256 indexed floorPrice,uint256 indexed endAt);
     constructor(address _nftContract) {
         owner = msg.sender;
-        feePercentage = 50; // 1% fee by default
+        feePercentage = 1; // 1% fee by default
         nftContract = ERC721(_nftContract);
     }
 

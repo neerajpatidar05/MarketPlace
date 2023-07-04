@@ -515,8 +515,8 @@
       ]
     },
     "/home/neeraj/Documents/logistic/MarketPlace/contracts/Marketplace.sol": {
-      "lastModificationDate": 1688461797069,
-      "contentHash": "cf64fe6d2dba910e73a856768a586b9c",
+      "lastModificationDate": 1688476201899,
+      "contentHash": "d88f4d2413538c08834f4213fac7b422",
       "sourceName": "contracts/Marketplace.sol",
       "solcConfig": {
         "version": "0.8.9",
