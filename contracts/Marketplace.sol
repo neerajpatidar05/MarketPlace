@@ -7,6 +7,7 @@ contract NFTMarketplace {
     address public owner;
     uint256 public feePercentage; // Fee percentage taken by the marketplace
     uint256 public startAt;
+    uint256 private bidcounter;
     enum SaleType{Auction, DirectSale}
     struct Sale {
         uint256 tokenId;
@@ -16,7 +17,11 @@ contract NFTMarketplace {
         uint endAt;
         SaleType SaleType;
     }
-
+    struct Request {
+        address requester;
+        uint256 amount;
+     }
+    mapping (uint256 => Request[]) public buyRequest;
     // struct AuctionListing{
     //     uint256 tokenId;
     //     uint256 floorPrice;
@@ -24,6 +29,7 @@ contract NFTMarketplace {
     //     address seller; 
     //     bool active;
     // }
+    //  1000000000000000000
 
    // mapping(uint256 => AuctionListing) public tokentoAuction;
     mapping(uint256 => Sale) public tokenIdToSale;
@@ -36,7 +42,7 @@ contract NFTMarketplace {
     event AuctionStarted(uint256 indexed tokenId,uint256 indexed floorPrice,uint256 indexed endAt);
     constructor(address _nftContract) {
         owner = msg.sender;
-        feePercentage = 1; // 1% fee by default
+        feePercentage = 50; // 1% fee by default
         nftContract = ERC721(_nftContract);
     }
 
@@ -72,8 +78,9 @@ contract NFTMarketplace {
     function cancelSale(uint256 _tokenId) external {
         Sale storage sale = tokenIdToSale[_tokenId];
         require(sale.active, "Sale is not active");
-        require(sale.seller == msg.sender, "Only the seller can cancel the sale");
-
+        // require(sale.seller == msg.sender, "Only the seller can cancel the sale");
+        require(nftContract.ownerOf(_tokenId) == msg.sender, "Only the token owner can create a sale");
+     
         delete tokenIdToSale[_tokenId];
         sale.active=false;
         // sale.SaleType=2;
@@ -108,9 +115,11 @@ contract NFTMarketplace {
         uint256 marketplaceFee = (sale.floorPrice * feePercentage) / 100;
         address originalOwner=sale.seller;
         delete tokenIdToSale[_tokenId];
-
+        uint256 amountToSeller = msg.value-marketplaceFee;
         nftContract.transferFrom(originalOwner, msg.sender, _tokenId);
-       // seller.transfer(sale.floorPrice - marketplaceFee);
+       seller.transfer(amountToSeller);
+            // Transfer funds to the seller and marketplace
+   
 
         emit SaleSuccessful(_tokenId, sale.seller, msg.sender, sale.floorPrice);
     }
@@ -133,43 +142,50 @@ contract NFTMarketplace {
     // }
 
     function bid(uint256 tokenId)public payable {
-         
+      
         Sale storage auction = tokenIdToSale[tokenId];
         require(auction.active, "Auction is not active");
         require(block.timestamp <= auction.endAt, "Auction has ended");
         require(msg.value > auction.floorPrice, "Bid must be higher than the floor price");
-        require(auction.SaleType==SaleType.DirectSale,"tokenid available for direct sale only");
-
+        require(auction.SaleType==SaleType.Auction,"tokenid available for direct sale only");
+       
         // Refund the previous highest bidder
-        if (auction.floorPrice > 0) {
-            address payable previousBidder = payable(auction.seller);
-            previousBidder.transfer(auction.floorPrice);
-        }
-
+        if(buyRequest[tokenId].length==0) {
         auction.floorPrice = msg.value;
         auction.seller = msg.sender;
-
+        buyRequest[tokenId].push(Request(msg.sender,msg.value));
+        }
+        else {
+        address payable previousBidder = payable(auction.seller);
+        previousBidder.transfer(auction.floorPrice);
+        auction.floorPrice = msg.value;
+        auction.seller = msg.sender;
+         buyRequest[tokenId].push(Request(msg.sender,msg.value));
+        }
         emit BidPlaced(tokenId, msg.sender, msg.value);
     }
-
+   function check()public view returns (uint256){
+       uint256 a=buyRequest[0].length;
+       return a;
+   }
     function endAuction(uint256 tokenId) public onlyOwner{
         Sale storage auction = tokenIdToSale[tokenId];
         require(auction.active, "Auction is not active");
         require(block.timestamp >= auction.endAt, "Auction has not ended yet");
- address originalOwner=auction.seller;
+ //address originalOwner=nftContract.ownerOf(tokenId);
         address highestBidder = auction.seller;
         uint256 winningBid = auction.floorPrice;
-
+address payable seller = payable(nftContract.ownerOf(tokenId));
         // Transfer the NFT to the highest bidder
-        nftContract.transferFrom(originalOwner, highestBidder, tokenId);
-
+        //nftContract.transferFrom(originalOwner, highestBidder, tokenId);
+ nftContract.transferFrom(seller, highestBidder, tokenId);
         // Distribute the funds: NFT price to the seller, marketplace fee to the owner
         uint256 marketplaceFee = (winningBid * feePercentage) / 100;
         uint256 sellerProceeds = winningBid - marketplaceFee;
 
-        address payable seller = payable(nftContract.ownerOf(tokenId));
+       // address payable seller = payable(nftContract.ownerOf(tokenId));
         seller.transfer(sellerProceeds);
-        payable(owner).transfer(marketplaceFee);
+        //payable(owner).transfer(marketplaceFee);
 
         // Mark the auction as inactive
         auction.active = false;
@@ -182,4 +198,3 @@ contract NFTMarketplace {
         payable(owner).transfer(balance);
     }
 }
-
