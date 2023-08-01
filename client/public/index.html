@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- meta tag -->
+		<link rel="icon" href="https://www.logisticinfotech.com/wp-content/uploads/2020/11/logo-300x300.png" />
+		<link rel="shortcut icon" href="logo.png" type="image/x-icon" />
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<title>NFT MarketPlace | Swap</title>
+		<meta name="description" content="" />
+		<!-- responsive tag -->
+		<link
+			rel="stylesheet"
+			href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+			integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+			crossorigin="anonymous"
+		/>
+
+		<!-- favicon -->
+		
+		<!-- Bootstrap v4.4.1 css -->
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="assets/css/bootstrap.min.css"
+		/>
+		<!-- animate css -->
+		<link rel="stylesheet" type="text/css" href="assets/css/animate.css" />
+		<!-- magnific css -->
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="assets/css/magnific-popup.css"
+		/>
+		<!-- owl.carousel css -->
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="assets/css/owl.carousel.css"
+		/>
+		<!-- off canvas css -->
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="assets/css/off-canvas.css"
+		/>
+		<!-- flaticon css  -->
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="assets/css/ico-moon-fonts.css"
+		/>
+		<!-- spacing css -->
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="assets/css/sc-spacing.css"
+		/>
+		<!-- style css -->
+		<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+		<!-- responsive css -->
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="assets/css/responsive.css"
+		/>
+	</head>
+	<body style="overflow-x: hidden !important" cz-shortcut-listen="true">
+		<div id="portal"></div>
+		<div id="root"></div>
+
+		<!-- modernizr js -->
+		<script src="assets/js/modernizr-2.8.3.min.js"></script>
+		<!-- jquery latest version -->
+		<script src="assets/js/jquery.min.js"></script>
+		<!-- Bootstrap v4.4.1 js -->
+		<script src="assets/js/bootstrap.min.js"></script>
+		<!-- popup.min js -->
+		<script src="assets/js/jquery.magnific-popup.min.js"></script>
+		<!-- imagesloaded.pkgd.min js -->
+		<script src="assets/js/imagesloaded.pkgd.min.js"></script>
+		<!-- wow js -->
+		<script src="assets/js/wow.min.js"></script>
+		<script src="assets/js/jquery.counterup.min.js"></script>
+		<!-- counter top js -->
+		<script src="assets/js/waypoints.min.js"></script>
+		<!-- owl.carousel js -->
+		<script src="assets/js/owl.carousel.min.js"></script>
+		<!-- plugins js -->
+		<script src="assets/js/plugins.js"></script>
+		<!-- Time Counter js -->
+		<script src="assets/js/time-counter.js"></script>
+		<!-- main js -->
+
+		<!--Project Clasic Slider-->
+		<script>
+			let slideIndex = 1;
+			showSlides(slideIndex);
+
+			function plusSlides(n) {
+				showSlides((slideIndex += n));
+			}
+
+			function currentSlide(n) {
+				showSlides((slideIndex = n));
+			}
+
+			function showSlides(n) {
+				let i;
+				let slides = document.getElementsByClassName("mySlides");
+				let dots = document.getElementsByClassName("dot");
+				if (n > slides.length) {
+					slideIndex = 1;
+				}
+				if (n < 1) {
+					slideIndex = slides.length;
+				}
+				for (i = 0; i < slides.length; i++) {
+					slides[i].style.display = "none";
+				}
+				for (i = 0; i < dots.length; i++) {
+					dots[i].className = dots[i].className.replace(
+						" active",
+						""
+					);
+				}
+				slides[slideIndex - 1].style.display = "block";
+				dots[slideIndex - 1].className += " active";
+			}
+		</script>
+
+		<script>
+			$(document).ready(function () {
+				$(".kycCountryDropbox").click(function () {
+					$(".kycCountryDropList").toggle();
+				});
+			});
+		</script>
+		<script>
+			function getFileData(myFile) {
+				var file = myFile.files[0];
+				var filename = file.name;
+				document.querySelector(
+					".drag-text"
+				).innerHTML = `<h3>${filename}</h3>`;
+			}
+		</script>
+		<script>
+			$(document).ready(function () {
+				$(".ChooseNetButton").click(function () {
+					$(".ChooseNetButton").removeClass("active");
+					$(this).toggleClass("active");
+				});
+			});
+		</script>
+		<script src="assets/js/main.js" defer></script>
+	</body>
+</html>

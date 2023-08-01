@@ -1,0 +1,53 @@
+@import '../global.scss';
+
+.footer {
+     width: 100%;
+     background:black;
+    
+
+
+     .main{
+        display: flex;
+        align-items: center;
+        padding: 1%;
+        width: 100%;
+        .contentImage{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content:space-evenly;
+            @include mobile{
+                display: block;
+                margin-left: 5%;
+             }
+            .image{
+                width: 350px;
+            }
+            .content{
+                display: block;
+                color: rgb(162, 162, 106);
+                @include mobile{
+                    margin-top: 10%;
+                 }
+               .copyText{
+                font-size: 1.3rem;
+               }
+               .center{
+                margin-top: 1%;
+
+                font-size: 1.3rem;
+               }
+               .bottom{
+                margin-top: 1%;
+                font-size: 1.3rem;
+               }
+            }
+
+        }
+     }
+    
+     
+     
+}
+
+

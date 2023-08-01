@@ -1,0 +1,33 @@
+@import '../global.scss';
+
+.topbar {
+     width: 100%;
+     position: fixed;
+     top: 0;
+     font-size: 14px;
+     background:rgb(0 0 0 / 79%);
+     height: 8vh;
+     overflow: hidden;
+   
+     img{
+          width: 20px;
+     }
+     
+     .wrapper {
+          padding: 10px 30px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+        span{
+            font-size: 35px;
+            color: aliceblue;
+            font-family: cursive;
+        }
+     }
+     
+     
+    
+}
+
+

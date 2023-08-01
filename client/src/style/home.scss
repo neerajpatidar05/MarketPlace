@@ -1,0 +1,18 @@
+@import "../global.scss";
+
+.home {
+     background-color: #121212;
+     height: 130vh;
+
+     .main {
+          width: 100%;
+          margin-top: 1%;
+          height: auto;
+
+          .imgContainer {
+               padding: 50px;
+               display: flex;
+               justify-content: center;
+          }
+     }
+}

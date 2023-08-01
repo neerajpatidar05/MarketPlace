@@ -1,0 +1,26 @@
+
+.headTitle{
+    display: flex;
+    justify-content: center;
+    padding: 2%;
+}
+.main{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.customers{
+    width: 50%;
+}
+.customers td{
+    padding: 1%;
+  }
+  
+  /* #customers tr:hover {background-color: #ddd;} */
+  
+  .customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    border: none;
+  }
