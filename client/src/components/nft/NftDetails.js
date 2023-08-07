@@ -15,6 +15,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import abi from 'abi/marketplace.json'
 import { ethers } from 'ethers';
+import { marketplaceContract} from 'web3config/web3config';
 const DatailsBody = styled(Box)(
   () => `
   
@@ -49,13 +50,8 @@ function NftDetails() {
   
 async function handleBuy() {
   try {
-    const address = '0x7D22c9017258983bbb7D32FcDEC15136feB6DB4F';
-    const contractabi = abi.abi;
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const contractss = new ethers.Contract(address, contractabi,signer);
-    await contractss.buy(tokenId,{value:1});
+    console.log(tokenId,"tokenid");
+    await marketplaceContract.buy(0,{value:1});
     
   } catch (error) {
     console.error('Error buying NFTs:', error);
@@ -180,7 +176,7 @@ async function handleBuy() {
                   Buy
                 </Button>
                 <Button sx={{ background: '#121212' }} variant="contained">
-                  Make offer
+                  Place Bid 
                 </Button>
               </CardActions>
             </Card>

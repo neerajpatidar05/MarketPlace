@@ -10,20 +10,11 @@ import { useWeb3React } from "@web3-react/core";
 import { imageWithAndHeight } from "utils";
 import { SUPPORTED_FORMATS } from "constant";
 import { createNftAction } from 'redux/action/nftAction';
-
-import { ethers } from 'ethers';
-import abi from 'abi/ERC721Contract.json'
-
+import { nftcontract } from 'web3config/web3config';
 
 export const useIgoApply =()=>{
 	
-const address = '0xe67956aD93e177A91F210B295B79AD48A13C925d';
-const contractabi = abi.abi;
-const { ethereum } = window;
-const provider = new ethers.providers.Web3Provider(ethereum);
-const signer = provider.getSigner();
-const contractss = new ethers.Contract(address, contractabi,signer);
-// console.log(contractss,'contractsssss');
+
     const navigate = useNavigate();
 	const { active } = useWeb3React();
 
@@ -79,7 +70,6 @@ const contractss = new ethers.Contract(address, contractabi,signer);
     const [name, setName] = useState("")
     const [desc, setDesc] = useState("")
 
-
     const formik = useFormik({
 		initialValues: {
 			nftname: "",
@@ -132,8 +122,8 @@ const contractss = new ethers.Contract(address, contractabi,signer);
 					console.log("final ", `ipfs://${resJSON.data.IpfsHash}`)
 					const tokenURI = `ipfs://${resJSON.data.IpfsHash}`;
 					console.log("Token URI", tokenURI);
-					console.log(contractss);
-					const trx=await contractss.safeMint(tokenURI);
+					// console.log(contractss);
+					const trx=await nftcontract.safeMint(tokenURI);
 					await trx.wait();
 					console.log("minted successfully");
 					alert(`NFT Minted successfully ${trx.hash}`);

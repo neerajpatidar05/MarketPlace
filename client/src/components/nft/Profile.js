@@ -1,42 +1,48 @@
-// // import React from 'react'
-import abi from 'abi/ERC721Contract.json'
-import { ethers } from 'ethers';
+
 import React, { useState ,useEffect} from 'react';
 import Web3 from 'web3';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { nftcontract, marketplaceContract } from 'web3config/web3config';
 const Profile = () => {
   const [nfts, setNFTs] = useState([]);
 
   useEffect(()=>{
     const  apiData = async() => {
+ 
       const fetchNFTs = async (Metamaskaddress) => {
         try {
-          const address = '0xe67956aD93e177A91F210B295B79AD48A13C925d';
-          const contractabi = abi.abi;
-          const { ethereum } = window;
-          const provider = new ethers.providers.Web3Provider(ethereum);
-          const signer = provider.getSigner();
-          const contractss = new ethers.Contract(address, contractabi,signer);
-          console.log(contractss,"contract object");
-          const tokenURIs = await contractss.getOwnedNFTs(Metamaskaddress );
-          console.log(tokenURIs,"tokenurissssssssssssssssssssssss");
-          if (tokenURIs !== null) {
-            // Filter out empty strings from tokenURIs array
-            const filteredTokenURIs = tokenURIs.filter(uri => uri !== '');
-          
-            if (filteredTokenURIs.length === 0) {
-              console.log("All tokenURIs are empty strings, skipping setNFTs()");
-            } else {
-              console.log(filteredTokenURIs, "tokenuri from profile");
-              setNFTs(filteredTokenURIs);
+          const tokenURIs = await nftcontract.getOwnedNFTs(Metamaskaddress);
+      
+          const filteredTokenURIs = tokenURIs.filter(tokenUri => tokenUri && tokenUri.trim() !== '');
+      
+          const getSuccessfullyBoughtTokens = await marketplaceContract.getSuccessfullyBoughtTokens(Metamaskaddress);
+          const tokenUriOfBoughtToken = [];
+      
+          if (getSuccessfullyBoughtTokens.length !== 0) {
+            for (let i = 0; i < getSuccessfullyBoughtTokens.length; i++) {
+              const tokenUri = await nftcontract.tokenURI(getSuccessfullyBoughtTokens[i]);
+              if (tokenUri && tokenUri.trim() !== '') {
+                tokenUriOfBoughtToken.push(tokenUri);
+              }
             }
+          }
+      
+          const combinedTokenURIsSet = new Set([...filteredTokenURIs, ...tokenUriOfBoughtToken]);
+          if (combinedTokenURIsSet.size === 0) {
+            console.log("All tokenURIs are empty, skipping setNFTs()");
+          } else {
+            const finalFilteredTokenURIs = Array.from(combinedTokenURIsSet);
+            console.log(finalFilteredTokenURIs, "tokenuri from profile");
+            setNFTs(finalFilteredTokenURIs);
           }
         } catch (error) {
           console.error('Error fetching NFTs:', error);
         }
       };
-
+      
+      
+      
       if (typeof window.ethereum !== 'undefined') {
               try {
                 await window.ethereum.enable();

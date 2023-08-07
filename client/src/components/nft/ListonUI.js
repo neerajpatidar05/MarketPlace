@@ -12,7 +12,7 @@ function ListonUI() {
   }, []);
 
   const fetchListedNFTs = async () => {
-    const address = '0xe67956aD93e177A91F210B295B79AD48A13C925d';
+    const address = '0x5C28F4E71005CedB42263C26A785B50DbAa51b73';
 const nftcontractabi = abi.abi;
 
 const { ethereum } = window;
@@ -21,7 +21,7 @@ const signer = provider.getSigner();
 
 const nftcontracts = new ethers.Contract(address, nftcontractabi,signer);
 const marketplacecontractabi = marketplaceabi.abi;
-const marketplaceaddress='0x7D22c9017258983bbb7D32FcDEC15136feB6DB4F';
+const marketplaceaddress='0xf43E9272E7c505d658cAC2c07Ee551f3dDF18Ac0';
 const marketplaceContract=new ethers.Contract(marketplaceaddress, marketplacecontractabi,signer);
     // Call the getlistedtoken() function of the marketplace contract to get the array of listed NFTs
 const listedTokens = await marketplaceContract.getListedTokens();
@@ -70,19 +70,7 @@ return(
     </div>))}
   </>
 )
-  // return (
-  //   <div>
-  //     <h1>Listed NFTs</h1>
-  //     {listedNFTs.map((nft) => (
-        
-  //       <div key={nft.tokenId}>
-          
-  //         <img src={`https://gateway.pinata.cloud/ipfs/Qmb4aNkjZ9XAkWwFndpBYWfdmHr5vRHYkNahH5R3fdQR2a`} alt={`NFT ${nft.tokenId}`} />
-  //         <p>Description: {nft.tokenURI}</p>
-  //       </div>
-  //     ))}
-  //   </div>
-  // );
+
 }
 
 export default ListonUI;

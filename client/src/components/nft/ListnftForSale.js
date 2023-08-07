@@ -18,6 +18,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ArrowDropDown } from '@mui/icons-material';
 import { ethers } from 'ethers'
 import abi from 'abi/ERC721Contract.json'
+import { nftcontract,marketplaceContract ,marketplaceaddress} from 'web3config/web3config'
 const DatailsBody = styled(Box)(
   () => `
   
@@ -57,33 +58,15 @@ function ListnftForSale() {
   const handlesaleType=(event)=>{
     setsaleType(event.target.value);
   }
-  console.log("list nft for sale 11111111111111");
-  // const location = useLocation()
-  // const data = location.state.d
-  // const tokenId= parseInt(data.tokenId._hex)
+
 let data ;
  async function handlelistfosale() {
-
-  const address = '0xe67956aD93e177A91F210B295B79AD48A13C925d';
-  const nftcontractabi = abi.abi;
-    console.log(saleType,"saletype");
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const nftcontracts = new ethers.Contract(address, nftcontractabi,signer);
-    const marketplacecontractabi = marketplaceabi.abi;
-    const marketplaceaddress='0x7D22c9017258983bbb7D32FcDEC15136feB6DB4F';
-    const marketplaceContract=new ethers.Contract(marketplaceaddress, marketplacecontractabi,signer);
-
-        // Call the getlistedtoken() function of the marketplace contract to get the array of listed NFTs
-        const param=[1,1,120,1];
-        console.log(nftcontracts,"nftcontrasssssssssss")
-       const approve=await nftcontracts.approve(marketplaceaddress,1);
-    const listedTokens = await marketplaceContract.createSale(...param);
+        const param=[1,amount,1200,saleType];
+        console.log(nftcontract,"nftcontrasssssssssss")
+        const approve=await nftcontract.approve(marketplaceaddress,1);
+        const listedTokens = await marketplaceContract.createSale(...param);
    
 console.log(listedTokens,"listedtokensssss");
-
-    
   }
   return (
     <>
@@ -189,7 +172,7 @@ console.log(listedTokens,"listedtokensssss");
                       <span>Token ID:</span>
                     </Grid>
                     <Grid item xs={6} md={8}>
-                      <span>198</span>
+                      <span>198</span>/0
                     </Grid>
                   </Grid>
                 </Box>
@@ -203,15 +186,14 @@ console.log(listedTokens,"listedtokensssss");
                 Make offer
               </Button> */}
              amount <input type="number" value={amount} onChange={handleAmountChange} />
- <Select value={selectedTimePeriod} onChange={handleTimePeriodChange}>
+      <Select value={selectedTimePeriod} onChange={handleTimePeriodChange}>
         <option value={1}>1 Month</option>
         <option value={2}>1 Week</option>
-      </Select>     
+      </Select>
       <Select value={saleType} onChange={handlesaleType}>
       <option value={1}>Auction</option>
       <option value={2}>DirectSell</option>
-   
-      </Select> </CardActions>
+     </Select> </CardActions>
           </Card>
         </Grid>
       </Grid>
