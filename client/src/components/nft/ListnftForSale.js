@@ -9,16 +9,23 @@ import {
   Container,
   Select,
   styled,
+  TextField,
   Typography,
 } from '@mui/material'
-import marketplaceabi from 'abi/marketplace.json'
+import { useRadioGroup } from '@mui/material/RadioGroup';
+
+import { ethers } from 'ethers'
 import Grid from '@mui/material/Grid'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { ArrowDropDown } from '@mui/icons-material';
-import { ethers } from 'ethers'
-import abi from 'abi/ERC721Contract.json'
-import { nftcontract,marketplaceContract ,marketplaceaddress} from 'web3config/web3config'
+import { nftcontract,marketplaceContract ,marketplaceaddress,nftcontractaddress} from 'web3config/web3config'
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 const DatailsBody = styled(Box)(
   () => `
   
@@ -46,6 +53,10 @@ const BackBtn = styled(Box)(
   `,
 )
 function ListnftForSale() {
+  const location = useLocation();
+  console.log(location,"locatiobnnnn");
+  const tokenid = parseInt(location.state.names.id._hex);
+  console.log(tokenid,"iddddddddddd");
   const [amount, setAmount] = useState('');
   const [selectedTimePeriod, setSelectedTimePeriod] = useState(1); // Default value is 1 Month
   const [saleType, setsaleType]=useState(1);
@@ -55,19 +66,21 @@ function ListnftForSale() {
   const handleTimePeriodChange = (event) => {
     setSelectedTimePeriod(event.target.value);
   };
-  const handlesaleType=(event)=>{
+  const handleSaleTypeChange=(event)=>{
     setsaleType(event.target.value);
   }
-
-let data ;
- async function handlelistfosale() {
-        const param=[1,amount,1200,saleType];
-        console.log(nftcontract,"nftcontrasssssssssss")
-        const approve=await nftcontract.approve(marketplaceaddress,1);
-        const listedTokens = await marketplaceContract.createSale(...param);
-   
-console.log(listedTokens,"listedtokensssss");
+  function etherToWei(etherAmount) {
+    const weiAmount = ethers.utils.parseEther(etherAmount.toString());
+    return weiAmount;
   }
+  
+ async function handlelistfosale() {
+        const weiAmount = etherToWei(amount);
+        const param=[tokenid,weiAmount,selectedTimePeriod,saleType];
+        console.log(nftcontract,"nftcontrasssssssssss")
+        const approve=await nftcontract.approve(marketplaceaddress,0);
+        const createSale = await marketplaceContract.createSale(...param);
+    }
   return (
     <>
     <div className="gamfi-breadcrumbs-section">
@@ -77,7 +90,7 @@ console.log(listedTokens,"listedtokensssss");
         </div>
       </div>
     </div>
-    
+    {console.log(saleType,"saletypeeee")}
     <Link to="/">
     <BackBtn><ArrowBackIcon/>  Back</BackBtn>
     </Link>
@@ -106,10 +119,10 @@ console.log(listedTokens,"listedtokensssss");
                 style={{ display: 'flex', justifyContent: 'space-between' }}
               >
                 <div>
-                  Owned by <b></b>
+                  Created by - You <b></b>
                 </div>
                 <div>
-                  Current Price <b> ETH</b>
+                  Current Price -<b> {amount} ETH</b>
                 </div>
               </Typography>
                   
@@ -142,7 +155,7 @@ console.log(listedTokens,"listedtokensssss");
                       <span>Contract Address:</span>
                     </Grid>
                     <Grid item xs={6} md={8}>
-                      <span>0xb6a37b5d14d502c3ab0ae6f3a0e058bc9517786e</span>
+                      <span>{nftcontractaddress}</span>
                     </Grid>
                   </Grid>
                 </Box>
@@ -172,7 +185,7 @@ console.log(listedTokens,"listedtokensssss");
                       <span>Token ID:</span>
                     </Grid>
                     <Grid item xs={6} md={8}>
-                      <span>198</span>/0
+                      <span>{tokenid}</span>
                     </Grid>
                   </Grid>
                 </Box>
@@ -181,19 +194,36 @@ console.log(listedTokens,"listedtokensssss");
             <CardActions>
               <Button sx={{ background: '#121212' }} variant="contained" onClick={handlelistfosale}>
               List for sale
-              </Button>
-              {/* <Button sx={{ background: '#121212' }} variant="contained">
-                Make offer
-              </Button> */}
+              </Button>            
              amount <input type="number" value={amount} onChange={handleAmountChange} />
-      <Select value={selectedTimePeriod} onChange={handleTimePeriodChange}>
-        <option value={1}>1 Month</option>
-        <option value={2}>1 Week</option>
-      </Select>
-      <Select value={saleType} onChange={handlesaleType}>
-      <option value={1}>Auction</option>
-      <option value={2}>DirectSell</option>
-     </Select> </CardActions>
+        <Box sx={{ minWidth: 120 }}>
+      <FormControl fullWidth>
+          <NativeSelect
+            value={selectedTimePeriod}
+            onChange={handleTimePeriodChange}
+            inputProps={{
+            name: 'sale-type',
+            id: 'sale-type-select',
+          }}
+        >
+          <option value={43200}>12 Hours</option>
+          <option value={86400}>1 Day</option>
+          <option value={604800}>1 week</option>
+          <option value={2592000}>30 Days</option>
+
+        </NativeSelect> 
+        <RadioGroup
+    aria-labelledby="demo-radio-buttons-group-label"
+    defaultValue="female"
+    name="radio-buttons-group"
+    onChange={handleSaleTypeChange}
+  >
+    <FormControlLabel value={1} control={<Radio />} label="DirectSale" />
+    <FormControlLabel value={2} control={<Radio />} label="Auction" />
+  </RadioGroup>
+      </FormControl>
+      </Box>
+      </CardActions>
           </Card>
         </Grid>
       </Grid>

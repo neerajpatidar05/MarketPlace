@@ -51,7 +51,7 @@ function NftDetails() {
 async function handleBuy() {
   try {
     console.log(tokenId,"tokenid");
-    await marketplaceContract.buy(0,{value:1});
+    await marketplaceContract.buy(tokenId,{value:1});
     
   } catch (error) {
     console.error('Error buying NFTs:', error);

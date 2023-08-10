@@ -13,7 +13,7 @@
                     constructor() ERC721("MyToken", "MTK") {}
                     mapping (uint256 => string) private _tokenURIs;
                     mapping(address => uint256[]) private _ownedTokens;
-
+                    mapping(string => uint256) private _tokenURIToId;
                     struct mintedNft{
                         address owner;
                         uint256[] tokenId;
@@ -27,9 +27,12 @@
                         _safeMint(msg.sender, tokenId);
                         _setTokenURI(tokenId,_tokenURI);
                         _ownedTokens[msg.sender].push(tokenId);
+                        _tokenURIToId[_tokenURI] = tokenId;
                         return tokenId;
                     }
-
+                    function getTokenId(string memory _tokenURI) public view returns (uint256) {
+                         return _tokenURIToId[_tokenURI];
+                     }
                     function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
                         require(_exists(tokenId), "ERC721Metadata: URI set of nonexistent token");
                         _tokenURIs[tokenId] = _tokenURI;
@@ -54,7 +57,8 @@
                             return string(abi.encodePacked(base, tokenId));
                         }
 
-                 
+
+
                     function getOwnedNFTs(address owner) public view returns (string[] memory) {
                         uint256[] memory tokenIds = _ownedTokens[owner];
                         string[] memory tokenURIs = new string[](tokenIds.length);

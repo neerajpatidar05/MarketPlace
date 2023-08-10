@@ -62,7 +62,6 @@ contract NFTMarketplace {
         removeTokenFromListed(_tokenId);
         listedTokenIds.push(_tokenId); 
         emit SaleCreated(_tokenId, msg.sender, _price);
-      
     }
  
      function cancelSale(uint256 _tokenId) external {
@@ -154,7 +153,7 @@ if (originalOwner != address(this)) {
         previousBidder.transfer(auction.floorPrice);
         auction.floorPrice = msg.value;
         auction.seller = msg.sender;
-         buyRequest[tokenId].push(Request(msg.sender,msg.value));
+        buyRequest[tokenId].push(Request(msg.sender,msg.value));
         }
         emit BidPlaced(tokenId, msg.sender, msg.value);
     }
@@ -174,7 +173,6 @@ if (originalOwner != address(this)) {
         emit AuctionEnded(tokenId, highestBidder, winningBid);
 }
 
-
     function withdrawFunds() external onlyOwner {
         uint256 balance = address(this).balance;
         payable(owner).transfer(balance);
@@ -192,6 +190,6 @@ if (originalOwner != address(this)) {
         return listedTokens;
     }
     function getSuccessfullyBoughtTokens(address _address) public view returns (uint256[] memory) {
-    return successfullyBuy[_address];
+       return successfullyBuy[_address];
 }
 }

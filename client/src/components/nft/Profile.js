@@ -4,6 +4,33 @@ import Web3 from 'web3';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { nftcontract, marketplaceContract } from 'web3config/web3config';
+import { Box, styled } from '@mui/material'
+
+const CardBody = styled(Box)(
+  () => `
+    margin: 30px 100px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap:2.5%;
+
+}
+  `,
+)
+const Body = styled(Card)(
+  () => `
+  width:20%;
+  margin-bottom:2%;
+ 
+  box-shadow: 1px 1px #342929;
+  border-radius: 0%;
+}
+  `,
+)
+async function checkIfNFTIsListed(tokenUri) {
+    return false  
+}
+
 const Profile = () => {
   const [nfts, setNFTs] = useState([]);
 
@@ -29,13 +56,20 @@ const Profile = () => {
           }
       
           const combinedTokenURIsSet = new Set([...filteredTokenURIs, ...tokenUriOfBoughtToken]);
-          if (combinedTokenURIsSet.size === 0) {
-            console.log("All tokenURIs are empty, skipping setNFTs()");
-          } else {
-            const finalFilteredTokenURIs = Array.from(combinedTokenURIsSet);
-            console.log(finalFilteredTokenURIs, "tokenuri from profile");
-            setNFTs(finalFilteredTokenURIs);
-          }
+          // if (combinedTokenURIsSet.size === 0) {
+          //   console.log("All tokenURIs are empty, skipping setNFTs()");
+          // } else {
+          //   const finalFilteredTokenURIs = Array.from(combinedTokenURIsSet);
+          //   console.log(finalFilteredTokenURIs, "tokenuri from profile");
+          //   setNFTs(finalFilteredTokenURIs);
+          // }
+          const tokenDataArray = await Promise.all(Array.from(combinedTokenURIsSet).map(async (tokenUri) => {
+            const tokenId = await nftcontract.getTokenId(tokenUri);
+            const isListed = await checkIfNFTIsListed(tokenUri); 
+            return { uri: tokenUri, id: tokenId , listed: isListed};
+          }));
+          console.log(tokenDataArray,"tokendataarray");
+           setNFTs(tokenDataArray);
         } catch (error) {
           console.error('Error fetching NFTs:', error);
         }
@@ -60,30 +94,31 @@ const Profile = () => {
     };
     apiData()
   },[])
- 
+
   return (
-    <div>
-      {/* <button onClick={connectToMetamask}>Connect to Metamask</button> */}
-      
+    <div><CardBody> <Body>
         {nfts.map((tokenURI, index) => (
+         
           <Card key={index}>
-            {/* Display NFT image */}
-            <CardMedia component="img" src={tokenURI.image} alt={`NFT ${tokenURI}`} />
-{/* {console.log(tokenURI.image)} */}
+            <CardMedia component="img" src='https://gateway.pinata.cloud/ipfs/Qmb4aNkjZ9XAkWwFndpBYWfdmHr5vRHYkNahH5R3fdQR2a'alt= {`NFT ${tokenURI.id}`} />
             <CardContent>
-              {/* Display NFT details */}
               <Typography variant="h5" component="div">
-                NFT Title
+                Token Id - {tokenURI.id.toString()}
               </Typography>
               <Typography variant="body2" color="text.secondary">
               NFT Description
               </Typography>
-              <Link to='/listnftforsale'>
-              <button >List NFT</button>
-              </Link>
-            </CardContent>
+            
+              {tokenURI.listed ? (
+        <p>Listed</p>
+      ) : (
+        <Link to={"/listnftforsale"} state={{names:tokenURI}}>
+          <button>List NFT</button>
+        </Link>)}
+             
+          </CardContent>
           </Card>
-        ))}
+        ))}</Body></CardBody>
       </div> 
   );
 };
